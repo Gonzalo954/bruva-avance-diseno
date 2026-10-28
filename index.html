@@ -39,7 +39,7 @@ const rows=[{"d":"Gabriel","c":"Maco","t":"Por definir","minutes":null,"note":""
 const extras=[];
 const work=[];
 const durationLabel=ms=>ms===null?'Sin registros':Math.floor(Math.round(ms/60000)/60)+' h '+(Math.round(ms/60000)%60)+' min';
-const averageLabel=(d,c)=>{const a=work.filter(w=>w.d===d&&(!c||w.c===c));return durationLabel(a.length?a.reduce((s,w)=>s+w.ms,0)/a.length:null)};
+const averageLabel=(d,c,piece)=>{const a=work.filter(w=>w.d===d&&(!c||w.c===c)&&(!piece||w.piece===piece));return durationLabel(a.length?a.reduce((s,w)=>s+w.ms,0)/a.length:null)};
 const opened=new Set();
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const organic=r=>r.t!=='Ads'&&!r.noGrid;
@@ -59,7 +59,7 @@ function render(){
  (brands.length?'<div class="scroll"><table><thead><tr><th>Marca</th><th>S1 · 2–8 nov</th><th>S2 · 9–15 nov</th><th>S3 · 16–22 nov</th><th>S4 · 23–29 nov</th><th>Tiempo de trabajo promedio</th></tr></thead><tbody>'+brands.map(r=>'<tr><td>'+esc(r.c)+(r.note?'<span class="sub">'+esc(r.note)+'</span>':'')+'</td>'+[1,2,3,4].map(()=>'<td><span class="week wait">Sin planificación</span></td>').join('')+'<td>'+averageLabel(r.d,r.c)+'</td></tr>').join('')+'</tbody></table></div>':'<p style="padding:0 18px">Sin grillas orgánicas asignadas. Sus trabajos figuran en la sección de extras.</p>')+'</details>';
  }).join('');
  document.querySelector('#calendar').querySelectorAll('details[data-designer]').forEach(group=>group.addEventListener('toggle',()=>{if(!group.isConnected)return;if(group.open)opened.add(group.dataset.designer);else opened.delete(group.dataset.designer)}));
- document.querySelector('#extras').innerHTML=shownExtras.length?shownExtras.map(e=>'<tr><td>'+esc(e.d)+'</td><td>'+esc(e.c)+'<span class="sub">'+esc(e.task)+'</span></td><td>'+esc(e.due)+'</td><td>'+averageLabel(e.d,e.c)+'</td><td><select aria-label="Estado de '+esc(e.task)+'" data-extra="'+extras.indexOf(e)+'">'+['Pendiente','En curso','Bloqueada','Completada'].map(s=>'<option'+(s===e.state?' selected':'')+'>'+s+'</option>').join('')+'</select></td></tr>').join(''):'<tr><td colspan="5" class="empty">Sin tareas extras registradas. Usa “Agregar tarea extra” para indicar en qué está cada diseñador.</td></tr>';
+ document.querySelector('#extras').innerHTML=shownExtras.length?shownExtras.map(e=>'<tr><td>'+esc(e.d)+'</td><td>'+esc(e.c)+'<span class="sub">'+esc(e.task)+'</span></td><td>'+esc(e.due)+'</td><td>'+averageLabel(e.d,e.c,e.task)+'</td><td><select aria-label="Estado de '+esc(e.task)+'" data-extra="'+extras.indexOf(e)+'">'+['Pendiente','En curso','Bloqueada','Completada'].map(s=>'<option'+(s===e.state?' selected':'')+'>'+s+'</option>').join('')+'</select></td></tr>').join(''):'<tr><td colspan="5" class="empty">Sin tareas extras registradas. Usa “Agregar tarea extra” para indicar en qué está cada diseñador.</td></tr>';
  document.querySelector('#work-log').innerHTML=work.filter(w=>!d||w.d===d).map(w=>'<tr><td>'+esc(w.d)+'</td><td>'+esc(w.c)+' / '+esc(w.piece)+'</td><td>'+esc(w.start.replace('T',' '))+'</td><td>'+esc(w.end.replace('T',' '))+'</td><td>'+durationLabel(w.ms)+'</td></tr>').join('')||'<tr><td colspan="5">Sin piezas entregadas registradas.</td></tr>';
  document.querySelector('#non-grid').innerHTML=visible.filter(r=>!organic(r)).map(r=>'<tr><td>'+esc(r.d)+'</td><td>'+esc(r.c)+'</td><td>'+esc(r.note||(r.t==='Ads'?'Piezas de Ads':'Trabajo fuera de grilla'))+'</td></tr>').join('')||'<tr><td colspan="3">Sin asignaciones fuera de grilla para este diseñador.</td></tr>';
 }
