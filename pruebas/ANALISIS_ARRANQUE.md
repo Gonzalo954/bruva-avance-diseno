@@ -1,23 +1,21 @@
-# Análisis del arranque de anuncios
+# Anuncios activos con resultados
 
-Abre `analisis-arranque.html` en un navegador y carga el JSON exportado desde el informe privado del análisis. El código de este repositorio público no contiene resultados, inversiones ni identificadores de anuncios de clientes.
+Abre `analisis-arranque.html` y carga el JSON exportado desde el informe privado. El repositorio público contiene la herramienta, sin datos de clientes.
 
-## Qué muestra
+## Selección
 
-- Días desde primera entrega observada hasta primer día con leads atribuidos.
-- Gasto acumulado al cierre de ese día y cantidad de leads atribuidos ese día.
-- Leads y CPL en los primeros 3, 7 y 14 días de calendario; marca ventanas incompletas.
-- Anuncios sin leads, gasto y días con entrega observada.
-- Curvas acumuladas comparables desde día cero, selección de hasta cinco anuncios y filtros por línea, objetivo y resultados.
+Solo anuncios con estado efectivo ACTIVE al corte y objetivo OUTCOME_LEADS. Por defecto se exige al menos 10 leads en el mes seleccionado y CPL mensual de hasta 10.000 CLP. Ambos umbrales son ajustables; el mínimo nunca baja de tres. Los pausados, archivados y anuncios con uno o dos leads mensuales quedan excluidos. Orden: menor CPL mensual. Estos criterios internos no certifican calidad comercial o rentabilidad.
 
-## Distinciones necesarias
+## Gráficos y comparación
 
-Un día atribuido por Meta no acredita la hora de captura de un formulario. El gasto al cierre de ese día no equivale al gasto exacto hasta el primer lead. Crear un anuncio o programar un conjunto no equivale a comenzar su entrega. Calendario y días con entrega pueden diferir por pausas. Un resultado temprano no acredita maduración ni calidad comercial.
+Tres gráficos sincronizados: leads acumulados, gasto acumulado y CPL acumulado. Al pasar el puntero o enfocar un punto se muestran fecha, día, leads, gasto, CPL con dos decimales y resultados del día. El selector de día actualiza la tabla y las guías de los tres gráficos. Las líneas se activan desde la leyenda.
 
-Usar una ventana de atribución consistente y evitar sumar subcategorías de leads que se solapan. La configuración actual del creativo o del público no prueba la configuración histórica del lanzamiento. Validar cambios de creativo y reutilización de IDs antes de atribuir diferencias a un producto.
+Permite alinear desde primera entrega del anuncio o desde inicio del mes, con horizontes de 7, 14 y 30 días. Día 1 incluye el primer día de la ventana. La tabla también muestra primer día con resultado y tiempo hasta diez leads. Las curvas terminan en el corte; el día del corte se marca como parcial. CPL sin leads se muestra ausente.
 
-La cohorte se selecciona por entrega reciente; no constituye un censo de todos los lanzamientos históricos. Los casos sin resultados tienen observación limitada; no son un tiempo de éxito infinito ni cero. Separar objetivos de reconocimiento e interacción de los de captación.
+## Interpretación
 
-## Validación realizada
+El filtro se basa en resultados mensuales; la curva desde lanzamiento puede mostrar otro período histórico. Elegir un mes anterior no reconstruye el estado pasado del anuncio: se mantiene el estado observado al corte. Un día atribuido no acredita la hora real de captura. Los costos incluyen todo el día, y los días de calendario incluyen pausas. Los nombres, creativos y públicos recuperados son actuales; verificar historial antes de atribuir causas. No se hacen cambios en campañas reales.
 
-Sintaxis JavaScript verificada. Datos del informe reconciliados por ID, fecha, gasto y leads, sin duplicados ID/día. Verificados en navegador: vista inicial, filtros de marca y anuncios sin leads y presencia de curvas SVG. El informe privado usa una fotografía de datos, no una conexión en vivo.
+## Validación
+
+Verificados cálculo mensual, elegibilidad, exclusión de pausados y bajo volumen, acumulados diarios, CPL, ventanas parciales y ausencia de costo con cero leads. En navegador se comprobaron selección inicial, detalle en puntos de días 5 y 14 y cambio de alineación a inicio de mes. El informe es una fotografía sin conexión en vivo.
